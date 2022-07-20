@@ -1,15 +1,34 @@
-from multiprocessing import context
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from .models import Product
+from math import ceil, prod
 
 
 def index(request):
-    return render(request, 'shop/index.html')
+    # products = Product.objects.all()
+    # n = len(products)
+    # nSlides = (n//4 + ceil((n/4) - (n//4)))
+    # params = {'no_of_slides': nSlides, 'range': range(1, nSlides), 'product': products}
+    # allProds = [[products, range(1, nSlides), nSlides],
+    #             [products, range(1, nSlides), nSlides]]
+
+    allProds = []
+    catprods = Product.objects.values('category', 'id')
+    cats = {item['category'] for item in catprods}
+    print("cats = ", cats)
+
+    for cat in cats:
+        prod = Product.objects.filter(category=cat)
+        n = len(prod)
+        nSlides = (n//4 + ceil((n/4) - (n//4)))
+        allProds.append([prod, range(1,nSlides), nSlides])
+
+    params = {'allProds': allProds}
+    return render(request, 'shop/index.html', params)
 
 
 def about(request):
-    return HttpResponse("We are at about page")
+    return render(request, 'shop/about.html')
 
 
 def contact(request):
@@ -18,6 +37,7 @@ def contact(request):
 
 def tracker(request):
     return HttpResponse("We are at tracker page")
+
 
 def search(request):
     return HttpResponse("We are at Search page")
@@ -31,8 +51,10 @@ def checkout(request):
     return HttpResponse("We are at checkout page")
 
 # Excercise - 3. get product data and display it into index.html page.
+
+
 def get_data(request):
     prod_data = Product.objects.all()
-    # one_data = 
-    context = {'Product_data' : prod_data}
+    # one_data =
+    context = {'Product_data': prod_data}
     return render(request, 'shop/get_data.html', context)
