@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
+from sympy import product
 from .models import Product
 from math import ceil, prod
 
@@ -43,8 +44,10 @@ def search(request):
         return render(request, 'shop/search.html')
 
 
-def productView(request):
-        return render(request, 'shop/prodView.html')
+def productView(request, myid):
+    # Fetch the product using id
+    product = Product.objects.filter(id = myid)
+    return render(request, 'shop/prodView.html', {'product':product[0]})
 
 
 def checkout(request):
