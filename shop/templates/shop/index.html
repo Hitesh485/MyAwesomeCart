@@ -108,6 +108,8 @@
 
 {% block js %}
 <script>
+  var res = 0;
+
   console.log("Working");
   if (localStorage.getItem('cart') == null)
   {
@@ -116,8 +118,17 @@
   else
   {
     cart = JSON.parse(localStorage.getItem('cart'));
-    document.getElementById('cart_id').innerHTML = Object.keys(cart).length;
+    var len = Object.values(cart);
+    console.log("localstorage len = ", Object.values(cart).length);
+    for (var i = 0; i < Object.values(cart).length; i++)
+    {
+      res = res + len[i];
+    }
+    console.log("arr ", res);
+    document.getElementById('cart_id').innerHTML = res;
   }
+
+  
   // JQuery - 
   $('.cart').click(function()
   {
@@ -133,8 +144,11 @@
     cart[idstr] = 1;
     }
     console.log(cart);
+    // console.log(Object.values(cart).length)
+    
     localStorage.setItem('cart', JSON.stringify(cart));
   });
+
   $('#popcart').popover();
   document.getElementById('popcart').setAttribute('data-content', '<h5>Cart</h5>');
 </script>
