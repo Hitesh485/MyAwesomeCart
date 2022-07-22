@@ -32,19 +32,19 @@ def about(request):
 
 
 def contact(request):
-    return HttpResponse("We are at contact page")
+        return render(request, 'shop/contact.html')
 
 
 def tracker(request):
-    return HttpResponse("We are at tracker page")
+        return render(request, 'shop/tracker.html')
 
 
 def search(request):
-    return HttpResponse("We are at Search page")
+        return render(request, 'shop/search.html')
 
 
 def productView(request):
-    return HttpResponse("We are at productView page")
+        return render(request, 'shop/prodView.html')
 
 
 def checkout(request):
@@ -52,9 +52,7 @@ def checkout(request):
 
 # Excercise - 3. get product data and display it into index.html page.
 
-
 def get_data(request):
     prod_data = Product.objects.all()
-    # one_data =
     context = {'Product_data': prod_data}
     return render(request, 'shop/get_data.html', context)
