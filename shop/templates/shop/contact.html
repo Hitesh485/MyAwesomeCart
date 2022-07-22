@@ -2,7 +2,8 @@
 
 {% block title %} Contact Us {% endblock %}
 
-{% block body %}<div class="content my-5">
+{% block body %}
+<div class="content my-5">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-10">
@@ -15,7 +16,8 @@
                                 alt="Image" class="img-fluid"></p>
                     </div>
                     <div class="col-md-6">
-                        <form class="mb-5" method="post" id="contactForm" name="contactForm">
+                        
+                        <form action="/shop/contact/" class="mb-5" method="POST" id="contactForm" name="contactForm">{% csrf_token %}
                             <div class="row">
                                 <div class="col-md-12 form-group">
                                     <input type="text" class="form-control" name="name" id="name"
@@ -47,6 +49,7 @@
                                 </div>
                             </div>
                         </form>
+
                         <div id="form-message-warning mt-4"></div>
                         <div id="form-message-success">
                             <!-- Your message was sent, thank you! -->

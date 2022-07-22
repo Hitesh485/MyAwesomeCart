@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from sympy import product
-from .models import Product
+from .models import Product, Contact
 from math import ceil, prod
 
 
@@ -33,7 +33,16 @@ def about(request):
 
 
 def contact(request):
-        return render(request, 'shop/contact.html')
+    if request.method == 'POST':
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+        subject = request.POST.get('subject', '')
+        message = request.POST.get('message', '')
+
+        contact = Contact(name= name, email = email, subject = subject, message = message)
+        contact.save()
+
+    return render(request, 'shop/contact.html')
 
 
 def tracker(request):
