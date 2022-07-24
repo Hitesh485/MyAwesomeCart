@@ -153,7 +153,7 @@
     for (var item in cart)
     {
       popStr = popStr + "<b>" + i + "</b>. ";
-      popStr = popStr + document.getElementById('name' + item).innerHTML.slice(0,19) + '... Qty: '+ cart[item][0] + '<br>';
+      popStr = popStr + document.getElementById('name' + item).innerHTML.slice(0,19) + '... Qty: '+ cart[item] + '<br>';
       i += 1;
     }
     popStr = popStr + "</div> <a href='/shop/checkout'><button class='btn btn-primary' id ='checkout'>Checkout</button></a> <button class='btn btn-primary' onclick='clearCart()' id ='clearCart'>Clear Cart</button>     "
