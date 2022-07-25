@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from sympy import product
-from .models import Product, Contact, Order
+from .models import Product, Contact
 from math import ceil, prod
 
 
@@ -16,7 +16,6 @@ def index(request):
     allProds = []
     catprods = Product.objects.values('category', 'id')
     cats = {item['category'] for item in catprods}
-    print("cats = ", cats)
 
     for cat in cats:
         prod = Product.objects.filter(category=cat)
@@ -44,21 +43,6 @@ def contact(request):
 
     return render(request, 'shop/contact.html')
 
-def checkout(request):
-    if request.method == 'post':
-        name = request.POST.get('name', '')
-        email = request.POST.get('email', '')
-        address = request.POST.get('address1', '') + " " + request.POST.get('address2', '') 
-        phone = request.POST.get('phone', '')
-        city = request.POST.get('city', '')
-        state = request.POST.get('state', '')
-        zip_code = request.POST.get('zip_code', '')
-        
-        order = Order(name=name, email=email, phone=phone, address=address, city=city, state=state,zip_code=zip_code)
-        order.save()
-        print("Order = ",order)
-
-    return render(request, 'shop/checkout.html')
 
 def tracker(request):
         return render(request, 'shop/tracker.html')
@@ -74,10 +58,12 @@ def productView(request, myid):
     return render(request, 'shop/prodView.html', {'product':product[0]})
 
 
-# Excercise - 3. get product data and display it into index.html page.
-# def get_data(request):
-#     prod_data = Product.objects.all()
-#     context = {'Product_data': prod_data}
-#     return render(request, 'shop/get_data.html', context)
-#***********************************************************************
+def checkout(request):
+    return HttpResponse("We are at checkout page")
 
+# Excercise - 3. get product data and display it into index.html page.
+
+def get_data(request):
+    prod_data = Product.objects.all()
+    context = {'Product_data': prod_data}
+    return render(request, 'shop/get_data.html', context)
