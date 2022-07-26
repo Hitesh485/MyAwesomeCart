@@ -59,7 +59,7 @@ def productView(request, myid):
 
 
 def checkout(request):
-    return HttpResponse("We are at checkout page")
+    return render(request, 'shop/checkout.html')
 
 # Excercise - 3. get product data and display it into index.html page.
 
