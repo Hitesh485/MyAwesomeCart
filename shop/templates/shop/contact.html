@@ -16,7 +16,7 @@
                                 alt="Image" class="img-fluid"></p>
                     </div>
                     <div class="col-md-6">
-                        
+
                         <form action="/shop/contact/" class="mb-5" method="POST" id="contactForm" name="contactForm">{% csrf_token %}
                             <div class="row">
                                 <div class="col-md-12 form-group">
@@ -60,4 +60,13 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block js %}
+<script>
+    {% if thank %}
+    alert('Thanks for your valueable Feedback!');
+    document.location = '/shop/contact';
+    {% endif %}
+</script>
 {% endblock %}
