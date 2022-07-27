@@ -1,5 +1,95 @@
 {% extends 'shop/basic.html' %}
 
-{% block title %} Order Tracker {% endblock %}
+{% block title %} My Awesome Cart {% endblock %}
 
-{% block body %}The Tracker page {% endblock %}
+{% block body %}
+
+<div class="container p-5">
+    <h2>Enter your order id and email address to track your order</h2>
+    <form method="post" onsubmit="return false" action="" id="trackerForm">{% csrf_token %}
+        <input type="hidden" name="itemsJson" id="itemsJson">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputName">Order Id</label>
+                <input type="text" class="form-control" id="orderId" name="orderId" placeholder="Order Id">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputEmail4">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+            </div>
+            <button type="submit" class="btn btn-primary">Track Order</button>
+        </div>
+    </form>
+    <div class="col my-4">
+        <h3>Your order status</h3>
+        <div class="my-4">
+            <ul class="list-group" id="items">
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+</form>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    $('#trackerForm').submit(function (event) {
+        $('#items').empty();
+        var formData = {
+            'orderId': $('input[name=orderId]').val(),
+            'email': $('input[name=email').val(),
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/shop/tracker/',
+            data: formData,
+            encode: true
+        })
+        .done(function (data) {
+            console.log(data);
+            updates = JSON.parse(data);
+            // console.log('Time = ', updates[1]['time']);
+            if (updates.length>0 & updates != {})
+            {
+                for (i = 0; i < updates.length; i++)
+                {
+                    let text = updates[i]['text'];
+                    let time = String(new Date(updates[i]['time'])).slice(0,15);
+                    mystr = `<li class = "list-group-item d-flex justify-content-between align-items-center">${text}
+                    <span class = "badge badge-primary badge-pill">${time}</span>
+                    </li>`
+                    console.log("Good to go");
+                    $('#items').append(mystr);
+                }
+            }
+            else
+            {
+                mystr = ` <li class= "list-group-item d-flex justify-content-between align-items-center">Sorry</li>`
+                console.log("Bad to go");
+                $('#items').append(mystr);
+            }
+        });
+        event.preventDefault();
+    });
+
+    sum = 0;
+    cart = JSON.parse(localStorage.getItem('cart'));
+    for (let item in cart)
+    {
+        sum += cart[item][0];
+    }
+
+    // When user click on cart on tracker page this function redirects to shop page.
+    document.getElementById('cart_id').innerHTML = sum;
+    $('.redirect').click(function(){
+        console.log("good");
+        var link = '/shop/';
+        window.location.href = link;
+    })
+</script>
+{% endblock %}
