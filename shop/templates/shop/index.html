@@ -78,6 +78,11 @@
               <h5 class="card-title" id="namepr{{i.id}}" >{{i.product_name}}</h5>
               <!-- Description limit char using slicing -->
                 <p class="card-text">{{i.desc|slice:'0:54'}}...</p>
+                <hr>
+                  <div class="mb-2">
+                    <span><b>Price : </b>Rs. </span>
+                    <span class="card-title" id="pricepr{{i.id}}">{{i.price}}</span>
+                  </div>
                   <span id= "divpr{{i.id}}" class="divpr">
                     <button id="pr{{i.id}}" class="btn btn-primary cart">Add to cart</button>
                   </span>
@@ -125,18 +130,22 @@
   // JQuery - 
   $('.divpr').on('click', 'button.cart', function() {
     var idstr = this.id.toString();
-    console.log(idstr)
+    console.log("idstr = ",idstr)
     if (cart[idstr] != undefined) {
       qty = cart[idstr][0] + 1;
       name = document.getElementById('name' + idstr).innerHTML;
-      console.log(name);
-      cart[idstr] = [qty, name];
+      priceProduct = document.getElementById('price' + idstr).innerHTML;
+      console.log('priceProduct', priceProduct)
+      cart[idstr] = [qty, name, priceProduct];
+      console.log("cart[idstr] = ", cart[idstr])
     }
     else {
       qty = 1;
       name = document.getElementById('name' + idstr).innerHTML;
-      console.log(name);
-      cart[idstr] = [qty, name];
+      priceProduct = document.getElementById('price' + idstr).innerHTML;
+      console.log('priceProduct', priceProduct)
+      cart[idstr] = [qty, name, priceProduct];
+      console.log("cart[idstr] = ", cart[idstr])
     }
     updateCart(cart);
   });
@@ -146,7 +155,6 @@
   updatePopover(cart);
   function updatePopover(cart)
   {
-    console.log('We are inside updatePopover');
     var popStr = "";
     popStr = popStr + "<h5> Cart items in your shopping cart </h5><div class ='mx-2 my-2'>";
     var i = 1;
@@ -182,6 +190,7 @@
     localStorage.setItem('cart', JSON.stringify(cart));
     document.getElementById('cart_id').innerHTML = sum;
     updatePopover(cart);
+    
   }
 
   // If plus or minus button is clicked, change the cart as well as the display value
@@ -199,5 +208,10 @@
     updateCart(cart);
   });
 
+  // Display price in cart -
+  // console.log("in prince");
+  // for (let item in cart){  
+  //   console.log("cart : ", cart);
+  // }
 </script>
 {% endblock %}
