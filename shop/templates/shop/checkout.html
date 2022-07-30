@@ -4,21 +4,23 @@
 
 {% block body %}
 
-<div class="container my-5 border p-3">
+<div class="container my-5 p-3">
     <ul class="list-group" id="items">
         
     </ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mt-3">
+          <li class="breadcrumb-item active" aria-current="page">Your Cart Total Is <b>Rs. <span id="totalPrice"></span></b>. Enter your details below & place your order. Thanks for using My Awesome Cart!</li>
+        </ol>
+      </nav>
 </div>
-<div class="container my-5 border p-3 p-3 mb-2 bg-primary">
-    <ul class="list-group" id="items2">
-        
-    </ul>
-</div>
+
 
 
 <div class="container border p-5">
     <form method="post" action="/shop/checkout/">{% csrf_token %}
         <input type="hidden" name="itemsJson" id="itemsJson">
+        <input type="hidden" name="amount" id="amount">
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="inputName">Name</label>
@@ -97,7 +99,7 @@
     }
     // Display items in popover button.
     document.getElementById('cart_id').innerHTML = sum;
-
+    var totalPrice = 0;
     // Display total amount - 
     if ($.isEmptyObject(cart)) { }
     else {
@@ -105,22 +107,25 @@
         for (var item in cart) {
             let qty = parseInt(cart[item][0]);
             let price = parseInt(cart[item][2]);
-            total = total + price * qty;
+            totalPrice = totalPrice + price * qty;
         }
         myTotalPriceStr = `<li class="list-group-item d-flex justify-content-between align-items-center">
             Your Total Amout is
-            <span class="badge badge-primary badge-pill">${total}</span>
+            <span class="badge badge-primary badge-pill">${totalPrice}</span>
         </li>`
-        $('#items2').append(myTotalPriceStr);
+        $('#totalPrice').append(myTotalPriceStr);
     }
 
     // After submit form this code will show message and clear cart and redirect to shop.html
+
+    document.getElementById('totalPrice').innerHTML = totalPrice;
+    console.log("totalPrice = ", totalPrice);
     var val = $('#itemsJson').val(JSON.stringify(cart));
-    console.log("itemJson = ", val);
     {% if thank %}
     alert("Thanks for ordering with us. Your order is is {{id}}. Use it to track your order using our order tracker");
     localStorage.clear();
     document.location = '/shop';
     {% endif %}
+    $('#amount').val($('#totalPrice').html())
 </script>
 {% endblock %}

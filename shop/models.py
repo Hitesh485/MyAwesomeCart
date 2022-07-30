@@ -36,6 +36,7 @@ class Order (models.Model):
     state = models.CharField(max_length=111)
     zip_code = models.CharField(max_length=111)
     phone = models.CharField(max_length=111, default="")
+    amount = models.IntegerField(default=0)
 
 class OrderUpdate(models.Model):
     update_id = models.AutoField(primary_key=True)

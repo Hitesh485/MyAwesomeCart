@@ -91,8 +91,10 @@ def checkout(request):
         state = request.POST.get('state', '')
         zip_code = request.POST.get('zip_code', '')
         phone = request.POST.get('phone', '')
+        amount = request.POST.get('amount', '')
+
         order = Order(items_json=items_json, name=name, email=email,
-                      address=address, city=city, state=state, zip_code=zip_code, phone=phone)
+                      address=address, city=city, state=state, zip_code=zip_code, phone=phone, amount = amount)
         order.save()
         update = OrderUpdate(order_id=order.order_id,
                              update_desc="The order has been placed")

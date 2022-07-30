@@ -35,8 +35,8 @@ img{
           <strong class="d-inline-block mb-2 text-primary">World</strong>
           <h3 class="mb-0">{{i.title}}</h3>
           <div class="mb-1 text-muted" bis_skin_checked="1">{{i.head0}}</div>
-          <p class="card-text mb-auto">{{i.head_content0}}</p>
-          <a href="blogpost/" class="stretched-link">Continue reading</a>
+          <p class="card-text mb-auto">{{i.head_content0|slice:'40'}}...</p>
+          <a href="blogpost/{{i.post_id}}" class="stretched-link">Continue reading</a>
         </div>
         <div class="col-auto d-none d-lg-block img-svg" bis_skin_checked="1">
           <!-- <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img"
