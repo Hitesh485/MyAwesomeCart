@@ -11,6 +11,7 @@ from paytmchecksum import PaytmChecksum
 
 MERCHANT_KEY = 'kbzk1DSbJiV_O3p5'
 
+
 def index(request):
     allProds = []
     catprods = Product.objects.values('category', 'id')
@@ -26,8 +27,34 @@ def index(request):
     return render(request, 'shop/index.html', params)
 
 
+def searchMatch (query, item):
+    if query in item.desc.lower() or query in item.product_name.lower() or query in item.category.lower():
+        return True
+    
+    elif query in item.desc or query in item.product_name or query in item.category:
+        return True
+    else:
+        return False
+
 def search(request):
-    return render(request, 'shop/search.html')
+    query = request.GET.get('search')
+    allProds = []
+    catprods = Product.objects.values('category', 'id')
+    cats = {item['category'] for item in catprods}
+
+    for cat in cats:
+        prodtemp = Product.objects.filter(category=cat)
+        prod = [item for item in prodtemp if searchMatch(query, item)]
+        n = len(prod)
+        nSlides = (n//4 + ceil((n/4) - (n//4)))
+        if (n != 0):
+            allProds.append([prod, range(1, nSlides), nSlides])
+
+    params = {'allProds': allProds, 'msg':""}
+    if (len(allProds) == 0):
+        params = {'msg': 'No product found!'}
+    return render(request, 'shop/search.html', params)
+
 
 def about(request):
     return render(request, 'shop/about.html')
@@ -58,8 +85,10 @@ def tracker(request):
                 update = OrderUpdate.objects.filter(order_id=orderId)
                 updates = []
                 for item in update:
-                    updates.append({'text': item.update_desc, 'time':item.timestamp})
-                    response = json.dumps([updates, order[0].items_json], default=str)
+                    updates.append(
+                        {'text': item.update_desc, 'time': item.timestamp})
+                    response = json.dumps(
+                        [updates, order[0].items_json], default=str)
                 return HttpResponse(response)
             else:
                 return HttpResponse({})
@@ -89,7 +118,7 @@ def checkout(request):
         amount = request.POST.get('amount', '')
 
         order = Order(items_json=items_json, name=name, email=email,
-                      address=address, city=city, state=state, zip_code=zip_code, phone=phone, amount = amount)
+                      address=address, city=city, state=state, zip_code=zip_code, phone=phone, amount=amount)
         order.save()
         update = OrderUpdate(order_id=order.order_id,
                              update_desc="The order has been placed")
@@ -99,19 +128,21 @@ def checkout(request):
         # return render(request, 'shop/checkout.html', {'thank': thank, 'id': id})
         # Request paytm to transfer the amount to your account after the payment by user
         param_dict = {
-            'MID':'WorldP64425807474247',
+            'MID': 'WorldP64425807474247',
             'ORDER_ID': str(order.order_id),
             'TXN_AMOUNT': str(amount),
             'CUST_ID': email,
-            'INDUSTRY_TYPE_ID':'Retail',
-            'WEBSITE':'WEBSTAGING',
-            'CHANNEL_ID':'WEB',
-	        'CALLBACK_URL':'http://127.0.0.1:8000/shop/handlerequest/',
+            'INDUSTRY_TYPE_ID': 'Retail',
+            'WEBSITE': 'WEBSTAGING',
+            'CHANNEL_ID': 'WEB',
+            'CALLBACK_URL': 'http://127.0.0.1:8000/shop/handlerequest/',
         }
-        param_dict['CHECKSUMHASH'] = checksum.generateSignature(param_dict, MERCHANT_KEY)
-        return render(request, 'shop/paytm.html', {'param_dict': param_dict})    
+        param_dict['CHECKSUMHASH'] = checksum.generateSignature(
+            param_dict, MERCHANT_KEY)
+        return render(request, 'shop/paytm.html', {'param_dict': param_dict})
 
     return render(request, 'shop/checkout.html')
+
 
 @csrf_exempt
 def handlerequest(request):
@@ -123,7 +154,8 @@ def handlerequest(request):
         if i == 'CHECKSUMHASH':
             checksum = form[i]
 
-    verify = PaytmChecksum.verifySignature(response_dict, MERCHANT_KEY, checksum)
+    verify = PaytmChecksum.verifySignature(
+        response_dict, MERCHANT_KEY, checksum)
     if verify:
         if response_dict['RESPCODE'] == '01':
             print('order successful')
