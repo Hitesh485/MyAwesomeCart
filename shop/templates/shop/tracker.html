@@ -59,7 +59,6 @@
             encode: true
         })
             .done(function (data) {
-                $('#citems').empty();
                 console.log('data = ', data);
                 if ($.isEmptyObject(data)) {
                     mystr = `<h3>Incorrect email or id</h3>`;
@@ -67,8 +66,8 @@
                 }
                 else {
                     data = JSON.parse(data);
-                    updates = data['updates'];
-                    if (data['status'] == 'success') {
+                    updates = data[0];
+                    if (updates.length > 0 & updates != {}) {
                         for (i = 0; i < updates.length; i++) {
                             let text = updates[i]['text'];
                             let time = String(new Date(updates[i]['time'])).slice(0, 15);
@@ -77,25 +76,25 @@
                         </li>`
                             $('#items').append(mystr);
                         }
-                        // Fill in the order details
-                        cart = JSON.parse(data['itemJson']);
-                        console.log(cart);
-                        for (item in cart) {
-                            let name = cart[item][1];
-                            let qty = cart[item][0];
-                            mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">${name}<span class="badge badge-primary badge-pill">${qty}</span></li>`;
-                            $('#citems').append(mystr);
-                        }
                     }
                     else {
-                        mystr = ` <li class= "list-group-item d-flex justify-content-between align-items-center">No item fetched! Please enter correct email or id.</li>`
-                        mystr2 = ` <li class= "list-group-item d-flex justify-content-between align-items-center">No item fetched!</li>`
+                        mystr = ` <li class= "list-group-item d-flex justify-content-between align-items-center">Sorry</li>`
                         $('#items').append(mystr);
-                        $('#citems').append(mystr2);
                     }
                 }
 
-
+                // Fill in the order details
+                cart = JSON.parse(data[1]);
+                console.log(cart);
+                for (item in cart) {
+                    let name = cart[item][1];
+                    let qty = cart[item][0];
+                    mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                    ${name}
+                    <span class="badge badge-primary badge-pill">${qty}</span>
+                    </li>`;
+                    $('#citems').append(mystr);
+                }
             });
         event.preventDefault();
     });
