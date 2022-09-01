@@ -7,7 +7,8 @@
 <div class="container p-5">
     <div class="col my-4">
         <h2>Enter your order id and email address to track your order</h2>
-        <form method="post" onsubmit="return false" action="" id="trackerForm">{% csrf_token %}
+        <form method="post" onsubmit="return false" action="" id="trackerForm">
+            {% csrf_token %}
             <input type="hidden" name="itemsJson" id="itemsJson">
             <div class="form-row">
                 <div class="form-group col-md-6">
